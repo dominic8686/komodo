@@ -12,12 +12,13 @@ Setting up automated Docker container version updates using GitHub, Renovate, an
   
 - **Target Docker Host**: 192.168.211.14
   - Credentials: root / M&Tallica (assumed)
-  - Purpose: ✅ New host where containers will be deployed and managed by Komodo
+  - Purpose: New host where containers will be deployed and managed by Komodo
   
-- **Source Docker Host**: 192.168.211.187
+- **Docker Host**: 192.168.211.187
   - Credentials: root / M&Tallica
-  - Status: ⚠️ **Docker NOT installed** - system is empty
-  - Finding: No containers or compose files found
+  - Docker Version: 29.2.1
+  - Docker Compose Version: v5.0.2
+  - Status: ✅ **Docker installed and operational**
   
 - **Proxmox Host**: 192.168.211.9
   - Credentials: root / M&Tallica
@@ -42,46 +43,54 @@ Docker Compose Files (GitHub)
          ↓
     Komodo pulls latest & redeploys
          ↓
-    Target Docker Host (192.168.211.14)
+    Docker Hosts (192.168.211.14 or 192.168.211.187)
 ```
 
-## Migration Strategy
-**UPDATE**: Since 192.168.211.187 has no Docker installed, we'll start fresh:
+## Deployment Strategy
+Deploy Docker applications using Komodo to manage containers across multiple hosts:
 1. Set up GitHub repository structure
 2. Configure Renovate for automated dependency scanning
-3. Add target Docker host (192.168.211.14) to Komodo
+3. Add Docker hosts (192.168.211.14 and/or 192.168.211.187) to Komodo
 4. Configure Komodo to connect to GitHub repo
 5. Set up webhook integration between GitHub and Komodo
-6. Deploy first Docker application from scratch
+6. Deploy first Docker application
 
-## Current Status
+## Current Progress
 - [x] Komodo password reset completed
 - [x] GitHub repository created
 - [x] Target Docker host identified (192.168.211.14)
-- [x] Source host checked - Docker not installed
+- [x] Docker installed on 192.168.211.187 (v29.2.1)
 - [ ] Repository structure setup
 - [ ] Renovate configuration
-- [ ] Add Docker host to Komodo
+- [ ] Add Docker hosts to Komodo
 - [ ] Komodo GitHub integration
 - [ ] Webhook configuration
 - [ ] First container deployment
 
 ## Next Steps
-1. ✅ Target host confirmed: 192.168.211.14
-2. ✅ Source host checked: No Docker installed on 192.168.211.187
-3. Clarify: Are we starting fresh or is there another Docker host?
+1. ✅ Docker installed on 192.168.211.187
+2. Decide which applications to deploy
+3. Determine which host(s) to use:
+   - 192.168.211.14 (new target)
+   - 192.168.211.187 (freshly installed Docker)
+   - Both?
 4. Determine webhook access method
-5. Connect 192.168.211.14 to Komodo
+5. Connect Docker host(s) to Komodo
 6. Create repository structure
 7. Configure Renovate
 
 ## Questions Still to Answer
-1. **Container Source**: Since 192.168.211.187 has no Docker:
-   - Are we starting fresh with new containers?
-   - Is there a different IP with existing containers?
-   - Do you want to install Docker on 192.168.211.187 first?
+1. **Host Selection**: Which Docker host(s) should we use?
+   - Deploy to 192.168.211.14?
+   - Deploy to 192.168.211.187?
+   - Use both hosts for different applications?
 
-2. **First Application**: What should be the first Docker application to deploy?
+2. **First Application**: What Docker application should we deploy first?
+   - Web application?
+   - Database?
+   - Monitoring tool?
+   - Media server?
+   - Other?
 
 3. **Webhook Access**: How will GitHub reach Komodo?
    - Reverse proxy + domain?
@@ -90,4 +99,4 @@ Docker Compose Files (GitHub)
    - Skip webhooks initially?
 
 ---
-*Last Updated: 2026-02-22 11:22*
+*Last Updated: 2026-02-22 11:27*
