@@ -7,6 +7,7 @@ Migrating media automation stack from 192.168.211.14 to 192.168.211.187 with aut
 
 ### Servers
 - **Komodo Server**: 192.168.211.108:9120
+  - Public URL: https://komodo.dezznuts.me
   - Credentials: admin / TempPass123!
   - Status: ✅ Deployed and accessible
   
@@ -31,6 +32,8 @@ Migrating media automation stack from 192.168.211.14 to 192.168.211.187 with aut
 
 ### Webhook Integration
 - **Method**: Cloudflare Tunnel
+- **URL**: https://komodo.dezznuts.me
+- **Status**: ✅ Configured
 - **Purpose**: Secure connection for GitHub webhooks to reach Komodo
 
 ## Containers to Migrate
@@ -72,7 +75,7 @@ Docker Compose Files (GitHub)
          ↓
     GitHub Webhook
          ↓
-    Cloudflare Tunnel
+    Cloudflare Tunnel (komodo.dezznuts.me)
          ↓
     Komodo (192.168.211.108)
          ↓
@@ -84,14 +87,14 @@ Docker Compose Files (GitHub)
 ## Migration Strategy
 
 ### Phase 1: Infrastructure Setup
-1. Set up Cloudflare Tunnel for Komodo webhook access
+1. ✅ Set up Cloudflare Tunnel (komodo.dezznuts.me)
 2. Configure Komodo to manage 192.168.211.187
 3. Set up GitHub repository structure
 4. Configure Renovate for automated dependency scanning
 5. Set up GitHub webhook to Komodo via Cloudflare Tunnel
 
 ### Phase 2: Container Migration (One at a time)
-**Suggested Migration Order:**
+**Migration Order:**
 1. **FlareSolverr** (supporting service, least dependencies)
 2. **Prowlarr** (indexer manager, central config)
 3. **qBittorrent** (download client)
@@ -112,7 +115,7 @@ Docker Compose Files (GitHub)
 - [x] Docker installed on target host (192.168.211.187)
 - [x] Inventory of source containers (192.168.211.14)
 - [x] Identified containers to migrate (6-7 core services)
-- [ ] Set up Cloudflare Tunnel
+- [x] Cloudflare Tunnel configured (komodo.dezznuts.me)
 - [ ] Add target host to Komodo
 - [ ] Repository structure setup
 - [ ] Renovate configuration
@@ -120,8 +123,8 @@ Docker Compose Files (GitHub)
 - [ ] First container migration
 
 ## Next Steps
-1. Set up Cloudflare Tunnel for webhook access
-2. Add 192.168.211.187 to Komodo as managed host
+1. ✅ Cloudflare Tunnel configured
+2. Add 192.168.211.187 to Komodo as managed server
 3. Create GitHub repository structure for compose files
 4. Configure Renovate
 5. Extract first container's compose config (FlareSolverr)
@@ -136,4 +139,4 @@ Docker Compose Files (GitHub)
 - **Data persistence** - Ensure volume mappings are correct for data migration
 
 ---
-*Last Updated: 2026-02-22 13:17*
+*Last Updated: 2026-02-22 13:31*
