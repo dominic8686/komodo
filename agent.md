@@ -10,7 +10,11 @@ Setting up automated Docker container version updates using GitHub, Renovate, an
   - Credentials: admin / TempPass123!
   - Status: ✅ Deployed and accessible
   
-- **Existing Docker Host**: 192.168.211.187
+- **Target Docker Host**: 192.168.211.14
+  - Credentials: root / M&Tallica (assumed)
+  - Purpose: ✅ New host where containers will be deployed and managed by Komodo
+  
+- **Source Docker Host**: 192.168.211.187
   - Credentials: root / M&Tallica
   - Purpose: Source for containers to migrate
   
@@ -36,43 +40,45 @@ Docker Compose Files (GitHub)
     GitHub Webhook → Komodo
          ↓
     Komodo pulls latest & redeploys
+         ↓
+    Target Docker Host (192.168.211.14)
 ```
 
 ## Migration Strategy
 1. Set up GitHub repository structure
 2. Configure Renovate for automated dependency scanning
-3. Configure Komodo to connect to GitHub repo
-4. Set up webhook integration between GitHub and Komodo
-5. Migrate Docker containers one at a time from 192.168.211.187
+3. Add target Docker host (192.168.211.14) to Komodo
+4. Configure Komodo to connect to GitHub repo
+5. Set up webhook integration between GitHub and Komodo
+6. Migrate Docker containers one at a time from 192.168.211.187 to 192.168.211.14
 
 ## Current Status
 - [x] Komodo password reset completed
 - [x] GitHub repository created
+- [x] Target Docker host identified (192.168.211.14)
 - [ ] Repository structure setup
 - [ ] Renovate configuration
+- [ ] Add Docker host to Komodo
 - [ ] Komodo GitHub integration
 - [ ] Webhook configuration
 - [ ] First container migration
 
 ## Next Steps
-1. Determine target Docker host for new deployments
-2. Identify first container to migrate
-3. Set up reverse proxy/tunnel for GitHub webhooks
-4. Create repository structure
-5. Configure Renovate
+1. ✅ Target host confirmed: 192.168.211.14
+2. Identify first container to migrate from 192.168.211.187
+3. Determine webhook access method (reverse proxy/domain/tunnel)
+4. Connect 192.168.211.14 to Komodo
+5. Create repository structure
+6. Configure Renovate
 
-## Questions to Answer
-1. **New Docker Host**: Where will migrated containers run?
-   - Same host as Komodo (192.168.211.108)?
-   - Different host that Komodo will manage?
-   - New host to set up?
+## Questions Still to Answer
+1. **First Container**: Which Docker application from 192.168.211.187 should we migrate first?
 
-2. **First Container**: Which Docker application should we migrate first?
-
-3. **Webhook Access**: How will GitHub reach Komodo?
-   - Reverse proxy (Nginx/Caddy)?
-   - Domain name?
-   - Tunnel service (Cloudflare Tunnel/ngrok)?
+2. **Webhook Access**: How will GitHub reach Komodo for webhook notifications?
+   - Do you have a reverse proxy (Nginx/Caddy/Traefik)?
+   - Do you have a domain name?
+   - Should we set up a tunnel service (Cloudflare Tunnel/ngrok)?
+   - Or handle webhooks another way?
 
 ---
-*Last Updated: 2026-02-22*
+*Last Updated: 2026-02-22 11:18*
