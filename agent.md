@@ -33,19 +33,21 @@ Migrating media automation stack from 192.168.211.14 to 192.168.211.187 with aut
 - **Method**: Cloudflare Tunnel
 - **Purpose**: Secure connection for GitHub webhooks to reach Komodo
 
-## Current Stack on 192.168.211.14
+## Containers to Migrate
 
-### Media Automation Services (11 containers)
+### ✅ Core Media Automation Services (6-7 containers)
 1. **prowlarr** - Indexer manager (centralized)
 2. **radarr** - Movie automation
 3. **sonarr** - TV show automation
 4. **readarr** - Book/audiobook automation
-5. **jackett** - Indexer proxy (legacy, can be replaced by Prowlarr)
-6. **qbittorrent** - Torrent download client
-7. **flaresolverr** - Cloudflare bypass solver
-8. **portainer** - Container management UI
-9. **watchtower** - Auto-container updater (⚠️ will be replaced by Renovate)
-10. **tandoor** - Recipe manager
+5. **qbittorrent** - Torrent download client
+6. **flaresolverr** - Cloudflare bypass solver
+7. **jackett** (optional) - Legacy indexer proxy
+
+### ❌ Containers to Skip
+- **portainer** - ❌ Redundant (using Komodo instead)
+- **watchtower** - ❌ Replaced by Renovate
+- **tandoor** - ❌ Not needed
 
 ### Compose File Structure
 ```
@@ -82,27 +84,21 @@ Docker Compose Files (GitHub)
 ## Migration Strategy
 
 ### Phase 1: Infrastructure Setup
-1. ✅ Install Docker on target host (192.168.211.187)
-2. Set up Cloudflare Tunnel for Komodo webhook access
-3. Configure Komodo to manage 192.168.211.187
-4. Set up GitHub repository structure
-5. Configure Renovate for automated dependency scanning
-6. Set up GitHub webhook to Komodo via Cloudflare Tunnel
+1. Set up Cloudflare Tunnel for Komodo webhook access
+2. Configure Komodo to manage 192.168.211.187
+3. Set up GitHub repository structure
+4. Configure Renovate for automated dependency scanning
+5. Set up GitHub webhook to Komodo via Cloudflare Tunnel
 
 ### Phase 2: Container Migration (One at a time)
-Migrate containers individually to minimize downtime:
-
 **Suggested Migration Order:**
-1. **Portainer** (management UI, least critical)
-2. **FlareSolverr** (supporting service)
-3. **Prowlarr** (indexer manager, central config)
-4. **qBittorrent** (download client)
-5. **Radarr** (movies)
-6. **Sonarr** (TV shows)
-7. **Readarr** (books)
-8. **Tandoor** (recipe manager)
-9. **Remove Watchtower** (replaced by Renovate)
-10. **Remove Jackett** (if using Prowlarr exclusively)
+1. **FlareSolverr** (supporting service, least dependencies)
+2. **Prowlarr** (indexer manager, central config)
+3. **qBittorrent** (download client)
+4. **Radarr** (movies)
+5. **Sonarr** (TV shows)
+6. **Readarr** (books)
+7. **Jackett** (optional, if still needed)
 
 ### Phase 3: Validation & Cleanup
 1. Verify all services running on new host
@@ -115,6 +111,7 @@ Migrate containers individually to minimize downtime:
 - [x] GitHub repository created
 - [x] Docker installed on target host (192.168.211.187)
 - [x] Inventory of source containers (192.168.211.14)
+- [x] Identified containers to migrate (6-7 core services)
 - [ ] Set up Cloudflare Tunnel
 - [ ] Add target host to Komodo
 - [ ] Repository structure setup
@@ -127,14 +124,16 @@ Migrate containers individually to minimize downtime:
 2. Add 192.168.211.187 to Komodo as managed host
 3. Create GitHub repository structure for compose files
 4. Configure Renovate
-5. Extract first container's compose config
+5. Extract first container's compose config (FlareSolverr)
 6. Begin migration
 
 ## Important Notes
+- **Portainer skipped** - Komodo replaces it
+- **Tandoor skipped** - Not needed
 - **Watchtower will be removed** - Renovate provides better control
-- **Jackett may be redundant** - Prowlarr can replace it
+- **Jackett optional** - Prowlarr can replace it
 - **Environment variables must be secured** - Use .gitignore for .env files
 - **Data persistence** - Ensure volume mappings are correct for data migration
 
 ---
-*Last Updated: 2026-02-22 13:10*
+*Last Updated: 2026-02-22 13:17*
