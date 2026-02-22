@@ -116,19 +116,35 @@ Docker Compose Files (GitHub)
 - [x] Inventory of source containers (192.168.211.14)
 - [x] Identified containers to migrate (6-7 core services)
 - [x] Cloudflare Tunnel configured (komodo.dezznuts.me)
-- [ ] Add target host to Komodo
-- [ ] Repository structure setup
-- [ ] Renovate configuration
-- [ ] GitHub webhook setup
-- [ ] First container migration
+- [x] Add target host to Komodo (192.168.211.187 configured as managed server)
+- [x] Repository structure setup (stacks/flaresolverr, .github/workflows, renovate.json)
+- [x] Renovate configuration (GitHub Actions workflow, runs daily at 2 AM UTC)
+- [x] GitHub PAT created and added as RENOVATE_TOKEN secret
+- [x] Komodo Git Provider configured with GitHub credentials
+- [x] Komodo Periphery installed on 192.168.211.187
+- [x] SSH key authentication setup (C:\Users\domin\.ssh\proxmox_key)
+- [x] GitHub webhook setup (webhook ID: 597477246, secret: GBmP5jUl1OUAluqaeixBZ4KTJLdv)
+- [x] First container migration: FlareSolverr deployed successfully
+- [ ] Create Komodo auto-deploy procedure
+- [ ] Test Renovate workflow end-to-end
+- [ ] Migrate remaining containers
 
 ## Next Steps
-1. ✅ Cloudflare Tunnel configured
-2. Add 192.168.211.187 to Komodo as managed server
-3. Create GitHub repository structure for compose files
-4. Configure Renovate
-5. Extract first container's compose config (FlareSolverr)
-6. Begin migration
+1. Create Komodo Procedure for auto-deploy (Pull Repo + Deploy Stack stages)
+   - Navigate to https://komodo.dezznuts.me/procedures
+   - Create new procedure: "Auto Deploy on Git Push"
+   - Stage 1: Pull Repo → komodo-stacks
+   - Stage 2: Deploy Stack → flaresolverr (with "if changed" flag)
+2. Configure webhook in Komodo to trigger procedure on push events
+3. Test end-to-end workflow:
+   - Make a test commit to FlareSolverr stack
+   - Verify webhook triggers procedure
+   - Verify automatic redeployment
+4. Test Renovate:
+   - Wait for daily run or manually trigger workflow
+   - Verify PR creation for image updates
+   - Merge PR and verify webhook triggers deployment
+5. Migrate remaining containers: Prowlarr, qBittorrent, Radarr, Sonarr, Readarr, Jackett
 
 ## Important Notes
 - **Portainer skipped** - Komodo replaces it
@@ -138,5 +154,32 @@ Docker Compose Files (GitHub)
 - **Environment variables must be secured** - Use .gitignore for .env files
 - **Data persistence** - Ensure volume mappings are correct for data migration
 
+## Technical Details
+
+### SSH Authentication
+- **Key Location**: C:\Users\domin\.ssh\proxmox_key (ED25519)
+- **Command Format**: `ssh -i "$env:USERPROFILE\.ssh\proxmox_key" root@<host>`
+- **Deployed to**: All hosts (192.168.211.187, 192.168.211.108, 192.168.211.14, 192.168.211.9)
+
+### GitHub Configuration
+- **Webhook ID**: 597477246
+- **Webhook URL**: https://komodo.dezznuts.me/webhook
+- **Webhook Secret**: GBmP5jUl1OUAluqaeixBZ4KTJLdv
+- **Webhook Events**: push
+- **Authentication**: GitHub CLI authenticated as dominic8686
+
+### Komodo Periphery
+- **Container**: komodo-periphery-1 on 192.168.211.187
+- **Repo Path (host)**: /opt/komodo-periphery/repos/komodo-stacks
+- **Repo Path (container)**: /etc/komodo/repos/komodo-stacks
+- **Passkey**: securerandompasskey123
+
+### FlareSolverr Stack
+- **Stack ID**: 699b0d11ad1a1820b92fd47c
+- **Run Directory**: /etc/komodo/repos/komodo-stacks/stacks/flaresolverr
+- **Compose File**: docker-compose.yml
+- **Version**: v3.3.21 (pinned)
+- **Status**: ✅ Deployed successfully
+
 ---
-*Last Updated: 2026-02-22 13:31*
+*Last Updated: 2026-02-22 16:50*
