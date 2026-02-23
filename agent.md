@@ -123,11 +123,12 @@ Docker Compose Files (GitHub)
 - [x] Komodo Git Provider configured with GitHub credentials
 - [x] Komodo Periphery installed on 192.168.211.187
 - [x] SSH key authentication setup (C:\Users\domin\.ssh\proxmox_key)
-- [x] GitHub webhook setup (webhook ID: 597477246, secret: GBmP5jUl1OUAluqaeixBZ4KTJLdv)
-- [x] First container migration: FlareSolverr deployed successfully
-- [ ] Create Komodo auto-deploy procedure
-- [ ] Test Renovate workflow end-to-end
-- [ ] Migrate remaining containers
+- [x] GitHub webhook setup (webhook ID: 597477246)
+- [x] First container migration: FlareSolverr v3.3.21 → v3.4.6 successfully
+- [x] Komodo auto-deploy procedure created and tested
+- [x] Renovate workflow tested end-to-end (PR #2 merged, auto-deployed)
+- [x] Complete automation pipeline working
+- [ ] Migrate remaining containers (Prowlarr, qBittorrent, Radarr, Sonarr, Readarr, Jackett)
 
 ## Next Steps
 1. Create Komodo Procedure for auto-deploy (Pull Repo + Deploy Stack stages)
@@ -163,23 +164,80 @@ Docker Compose Files (GitHub)
 
 ### GitHub Configuration
 - **Webhook ID**: 597477246
-- **Webhook URL**: https://komodo.dezznuts.me/webhook
+- **Webhook URL**: https://komodo.dezznuts.me/listener/github/procedure/699b374cad1a1820b92fda2f/main
 - **Webhook Secret**: GBmP5jUl1OUAluqaeixBZ4KTJLdv
 - **Webhook Events**: push
+- **Webhook Status**: ✅ Working (returns 200 OK)
 - **Authentication**: GitHub CLI authenticated as dominic8686
+- **Renovate Token**: Stored in GitHub Secrets as RENOVATE_TOKEN
+
+### Komodo Configuration
+- **Host Setting**: KOMODO_HOST=https://komodo.dezznuts.me
+- **Webhook Secret**: GBmP5jUl1OUAluqaeixBZ4KTJLdv (global default)
+- **Procedure ID**: 699b374cad1a1820b92fda2f
+- **Procedure Name**: Auto Deploy on Git Push
+- **Procedure Stages**:
+  1. Pull Repo (komodo-stacks)
+  2. Deploy Stack (flaresolverr, if changed)
 
 ### Komodo Periphery
-- **Container**: komodo-periphery-1 on 192.168.211.187
-- **Repo Path (host)**: /opt/komodo-periphery/repos/komodo-stacks
-- **Repo Path (container)**: /etc/komodo/repos/komodo-stacks
+- **Container**: komodo-periphery on 192.168.211.187
+- **Repo Path (host)**: /opt/komodo-periphery/repos/
+- **Repo Path (container)**: /etc/komodo/repos/github/
+- **Clone Path**: Empty (uses default git provider structure)
 - **Passkey**: securerandompasskey123
 
 ### FlareSolverr Stack
 - **Stack ID**: 699b0d11ad1a1820b92fd47c
-- **Run Directory**: /etc/komodo/repos/komodo-stacks/stacks/flaresolverr
+- **Run Directory**: /etc/komodo/repos/github/stacks/flaresolverr
 - **Compose File**: docker-compose.yml
-- **Version**: v3.3.21 (pinned)
-- **Status**: ✅ Deployed successfully
+- **Initial Version**: v3.3.21
+- **Current Version**: v3.4.6 (auto-updated via Renovate PR #2)
+- **Status**: ✅ Deployed and automated
+
+## ✅ Completed Milestones
+
+### Infrastructure Setup (Complete)
+- ✅ Cloudflare Tunnel configured for webhook access
+- ✅ Komodo managing Docker on 192.168.211.187
+- ✅ SSH key authentication deployed to all hosts
+- ✅ GitHub repository with proper structure
+
+### Automation Pipeline (Complete)
+- ✅ Renovate scanning docker-compose.yml files daily
+- ✅ GitHub webhook triggering Komodo procedure
+- ✅ Komodo procedure pulling repo and deploying stacks
+- ✅ End-to-end tested: PR merge → webhook → deploy → v3.4.6 running
+
+### First Container Migration (Complete)
+- ✅ FlareSolverr migrated from 192.168.211.14 to 192.168.211.187
+- ✅ Version pinned in docker-compose.yml
+- ✅ Renovate detected update (v3.3.21 → v3.4.6)
+- ✅ PR created, merged, and automatically deployed
+
+## 🎯 Troubleshooting Notes
+
+### Issues Resolved
+1. **Webhook 400 Error**: Fixed by setting correct KOMODO_HOST environment variable
+2. **Repo Pull Failing**: Fixed by clearing Clone Path (use git provider default structure)
+3. **Procedure ID Mismatch**: Fixed by using correct procedure ID from Komodo UI
+4. **SSH Password Issues**: Fixed by creating ED25519 key pair
+5. **Token Expired**: Created new GitHub PAT with all permissions
+
+### Key Learnings
+- Komodo uses `/etc/komodo/repos/{git_provider_domain}/` structure
+- Clone Path should be empty to use default structure
+- KOMODO_HOST must match your actual domain for webhooks to work
+- Container restart doesn't reload env vars - need to recreate with `docker compose up -d --force-recreate`
+- Procedure webhook URL format: `https://{host}/listener/github/procedure/{id}/{branch}`
+
+## 📚 Documentation
+
+- **README.md**: User-facing documentation for the automation
+- **agent.md**: Technical implementation log (this file)
+- **renovate.json**: Renovate configuration
+- **.github/workflows/renovate.yml**: GitHub Actions workflow
 
 ---
-*Last Updated: 2026-02-22 16:50*
+*Last Updated: 2026-02-23 07:13*
+*Status: ✅ Complete automation pipeline operational*
