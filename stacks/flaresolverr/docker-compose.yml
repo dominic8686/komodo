@@ -1,4 +1,4 @@
-# Testing complete automation: webhook -> procedure -> deploy (with secret configured)
+# Testing complete automation: webhook -> procedure -> deploy - final test
 services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
