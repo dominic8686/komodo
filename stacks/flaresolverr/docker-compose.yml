@@ -1,4 +1,4 @@
-# Complete automation working: webhook -> procedure -> pull -> deploy
+# Testing webhook automation with correct Komodo host and procedure ID
 services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
