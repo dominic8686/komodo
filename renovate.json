@@ -1,14 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "docker-compose": {
-    "fileMatch": ["(^|/)docker-compose.*\\.ya?ml$"],
+    "managerFilePatterns": [
+      "/(^|/)docker-compose.*\\.ya?ml$/"
+    ],
     "enabled": true
   },
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "🦎 Renovate Dashboard",
-  "assignees": ["dominic8686"],
-  "labels": ["renovate", "dependencies"],
+  "assignees": [
+    "dominic8686"
+  ],
+  "labels": [
+    "renovate",
+    "dependencies"
+  ],
   "configMigration": true,
   "prHourlyLimit": 0,
   "prConcurrentLimit": 10,
@@ -16,23 +25,34 @@
   "commitMessagePrefix": "chore:",
   "commitBody": "Co-Authored-By: Warp <agent@warp.dev>",
   "timezone": "America/New_York",
-  "schedule": ["after 10pm every weekday", "before 5am every weekday", "every weekend"],
+  "schedule": [
+    "after 10pm every weekday",
+    "before 5am every weekday",
+    "every weekend"
+  ],
   "packageRules": [
     {
       "description": "Docker images - group by service",
-      "matchDatasources": ["docker"],
+      "matchDatasources": [
+        "docker"
+      ],
       "groupName": "Docker images",
       "commitMessageTopic": "Docker images"
     },
     {
       "description": "Auto-merge minor and patch updates",
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": false,
       "automergeType": "pr"
     },
     {
       "description": "Pin major versions",
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "enabled": true
     }
   ],
